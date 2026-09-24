@@ -1,0 +1,18 @@
+/* Design system partagé : les tokens viennent du dépôt frontend/design-system.
+   En prod, ce fichier est copié/bundlé ; ici on l'importe pour garantir la
+   cohérence React/Angular/Vanilla (mêmes tokens, mêmes composants de base). */
+@import "../../design-system/tokens.css";
+
+/* Styles spécifiques marketplace (slider, seat map) */
+.tf-hero-slide { position: relative; border-radius: var(--tf-radius-lg); overflow: hidden; min-height: 320px; display: flex; align-items: flex-end; }
+.tf-hero-slide img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.tf-hero-overlay { position: relative; padding: var(--tf-space-6); background: linear-gradient(transparent, rgba(10,10,15,.75)); width: 100%; color: #fff; }
+.tf-slider-dots { display: flex; gap: var(--tf-space-2); justify-content: center; margin-top: var(--tf-space-4); }
+.tf-slider-dots button { width: 8px; height: 8px; border-radius: 50%; border: none; background: var(--tf-border); cursor: pointer; padding: 0; }
+.tf-slider-dots button[aria-current="true"] { background: var(--tf-accent); }
+.seatmap svg { width: 100%; height: auto; touch-action: none; }
+.seat { fill: var(--tf-bg-raised); stroke: var(--tf-border); cursor: pointer; transition: fill var(--tf-transition); }
+.seat:hover { fill: var(--tf-accent-soft); }
+.seat--held { fill: var(--tf-warning); stroke: var(--tf-warning); cursor: not-allowed; }
+.seat--sold { fill: var(--tf-border); stroke: var(--tf-border); cursor: not-allowed; }
+.seat--selected { fill: var(--tf-accent); stroke: var(--tf-accent-strong); }

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>TicketFlow — Contrôle d'accès</title>
+  <link rel="stylesheet" href="../design-system/tokens.css" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <style>
+    /* Styles specifiques scanner (hors tokens partages) : plein ecran, tres grand contraste */
+    body { height: 100dvh; display: flex; flex-direction: column; }
+    #stage { flex: 1; position: relative; background: #000; overflow: hidden; }
+    video, canvas.capture { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hud { position: absolute; left: 0; right: 0; padding: var(--tf-space-4); text-align: center; color: #fff; font-weight: 700; text-shadow: 0 1px 3px #000; }
+    #result { min-height: 132px; border-top: 4px solid var(--tf-border); padding: var(--tf-space-4); transition: background var(--tf-transition); }
+    #result.ok { background: var(--tf-success); color: #fff; border-top-color: var(--tf-success); }
+    #result.ko { background: var(--tf-danger); color: #fff; border-top-color: var(--tf-danger); }
+    #result h2 { margin: 0; font-size: var(--tf-text-2xl); letter-spacing: .02em; }
+    kbd { background: var(--tf-bg-raised); border: 1px solid var(--tf-border); border-radius: 4px; padding: 0 .4em; font-family: monospace; }
+    .offline-pill { position: fixed; top: 8px; right: 8px; z-index: 10; }
+  </style>
+</head>
+<body>
+  <div id="app" style="display:flex;flex-direction:column;height:100%">
+    <!-- ECRAN 1 : IDENTIFICATION AGENT -->
+    <section id="screen-login" class="tf-container" style="padding-block:var(--tf-space-8);max-width:420px;margin:auto;width:100%">
+      <h1 style="font-size:var(--tf-text-2xl)">Contrôle d'accès</h1>
+      <p class="tf-muted">Identifiez-vous avec le compte agent créé par l'organisateur.</p>
+      <form id="login-form" class="tf-stack">
+        <div><label class="tf-label" for="login-email">Email</label><input class="tf-input" id="login-email" type="email" required autocomplete="username"></div>
+        <div><label class="tf-label" for="login-password">Mot de passe</label><input class="tf-input" id="login-password" type="password" required autocomplete="current-password"></div>
+        <button class="tf-btn tf-btn--primary" type="submit">Se connecter</button>
+        <p id="login-error" role="alert" style="color:var(--tf-danger);display:none"></p>
+      </form>
+    </section>
+
+    <!-- ECRAN 2 : SCANNER -->
+    <section id="screen-scan" hidden style="display:flex;flex-direction:column;flex:1">
+      <header class="tf-row" style="padding:var(--tf-space-3) var(--tf-space-4);border-bottom:1px solid var(--tf-border)">
+        <strong>Ticket<span style="color:var(--tf-accent)">Flow</span> Scanner</strong>
+        <span id="agent-name" class="tf-muted" style="font-size:var(--tf-text-sm)"></span>
+        <select id="event-select" class="tf-input" style="width:auto;margin-left:auto" aria-label="Événement actif"></select>
+        <button id="theme-toggle" class="tf-btn tf-btn--secondary" aria-label="Basculer le thème">◐</button>
+        <button id="logout-btn" class="tf-btn tf-btn--ghost">Quitter</button>
+      </header>
+      <span id="offline" class="tf-badge tf-badge--warning offline-pill" hidden>Hors ligne — files d'attente locale</span>
+      <div id="stage">
+        <video id="video" playsinline muted></video>
+        <canvas id="freeze" class="capture" hidden></canvas>
+        <p class="hud" style="bottom:16px">Alignez le QR code du billet — ou saisissez le code <kbd>TF-…</kbd> ci-dessous</p>
+      </div>
+      <div id="result" role="status" aria-live="assertive">
+        <p class="tf-muted">En attente de scan…</p>
+      </div>
+      <form id="manual-form" class="tf-row" style="padding:var(--tf-space-3) var(--tf-space-4)">
+        <input id="manual-code" class="tf-input" placeholder="Code manuel TF-XXXX-XXXX" autocomplete="off" aria-label="Code du billet">
+        <button class="tf-btn tf-btn--primary" type="submit">Vérifier</button>
+        <button id="camera-toggle" class="tf-btn tf-btn--secondary" type="button" aria-pressed="true">Caméra ON</button>
+      </form>
+    </section>
+  </div>
+  <script src="../design-system/icons.svg" as="image"></script>
+  <script type="module" src="js/app.js"></script>
+  <noscript>Cette application nécessite JavaScript (scan QR temps réel).</noscript>
+</body>
+</html>
