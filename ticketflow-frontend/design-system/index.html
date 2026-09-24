@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<!--
+  Design System TicketFlow — feuille de styles unique PARTAGÉE entre :
+    - la marketplace React (import directe dans index.css)
+    - les dashboards Angular (référencée dans angular.json → styles[])
+    - le scanner Vanilla JS (chargée en <link>)
+
+  Règles de design (cahier des charges) :
+    - PAS de glassmorphisme, PAS d'ombres exagérées, PAS d'emojis.
+    - Accent violet électrique #6D5EF8, typographie Inter, espaces généreux.
+    - Mode clair/sombre piloté par [data-theme] (localStorage + prefers-color-scheme).
+    - Mobile-first jusqu'à 375 px.
+-->
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TicketFlow — Design System</title>
+  <style>
+    /* ================================================================
+       1. TOKENS — source de vérité unique (aussi publiée en tokens.css)
+       ================================================================ */
+    :root {
+      /* Couleurs de marque */
+      --tf-accent: #6d5ef8;
+      --tf-accent-strong: #5646e8;
+      --tf-accent-soft: rgba(109, 94, 248, 0.12);
+
+      /* Sémantique (thème clair) */
+      --tf-bg: #ffffff;
+      --tf-bg-raised: #f7f7f9;
+      --tf-border: #e4e4ea;
+      --tf-text: #16161d;
+      --tf-text-muted: #6b6b7b;
+      --tf-success: #178a50;
+      --tf-warning: #b45309;
+      --tf-danger: #c0262e;
+
+      /* Typographie */
+      --tf-font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --tf-text-xs: 0.75rem;
+      --tf-text-sm: 0.875rem;
+      --tf-text-base: 1rem;
+      --tf-text-lg: 1.125rem;
+      --tf-text-xl: 1.375rem;
+      --tf-text-2xl: 1.75rem;
+      --tf-text-3xl: 2.25rem;
+
+      /* Espacement (échelle 4px) */
+      --tf-space-1: 0.25rem; --tf-space-2: 0.5rem;  --tf-space-3: 0.75rem;
+      --tf-space-4: 1rem;    --tf-space-5: 1.5rem;  --tf-space-6: 2rem;
+      --tf-space-8: 3rem;    --tf-space-10: 4rem;
+
+      /* Rayons & transitions — subtils, jamais criards */
+      --tf-radius-sm: 6px; --tf-radius-md: 10px; --tf-radius-lg: 16px; --tf-radius-full: 999px;
+      --tf-transition: 160ms cubic-bezier(0.4, 0, 0.2, 1);
+
+      /* Ombres MINIMALES : uniquement pour élévation fonctionnelle (modale, menu) */
+      --tf-shadow-pop: 0 8px 24px rgba(22, 22, 29, 0.10);
+    }
+
+    [data-theme="dark"] {
+      --tf-bg: #0e0e13;
+      --tf-bg-raised: #17171f;
+      --tf-border: #26262f;
+      --tf-text: #ececf1;
+      --tf-text-muted: #9a9aad;
+      --tf-accent-soft: rgba(109, 94, 248, 0.20);
+      --tf-success: #34c37a;
+      --tf-warning: #e0a33a;
+      --tf-danger: #f0555e;
+      --tf-shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    /* ================================================================
+       2. BASE
+       ================================================================ */
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: var(--tf-font); background: var(--tf-bg); color: var(--tf-text);
+      -webkit-font-smoothing: antialiased; line-height: 1.55;
+    }
+    h1, h2, h3 { line-height: 1.2; letter-spacing: -0.01em; }
+    a { color: var(--tf-accent); text-decoration: none; }
+    :focus-visible { outline: 2px solid var(--tf-accent); outline-offset: 2px; } /* accessibilité clavier */
+
+    .container { max-width: 1120px; margin-inline: auto; padding-inline: var(--tf-space-4); }
+    .section { padding-block: var(--tf-space-10); }
+    .muted { color: var(--tf-text-muted); }
+    .money { font-variant-numeric: tabular-nums; white-space: nowrap; } /* « 12 500 FCFA » ne se casse jamais */
+
+    /* ================================================================
+       3. BOUTONS
+       ================================================================ */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: var(--tf-space-2);
+      font: inherit; font-weight: 600; font-size: var(--tf-text-sm);
+      padding: 0.625rem 1.25rem; border-radius: var(--tf-radius-md); border: 1px solid transparent;
+      cursor: pointer; transition: background var(--tf-transition), border-color var(--tf-transition), transform var(--tf-transition);
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn[disabled] { opacity: 0.55; cursor: not-allowed; }
+    .btn--primary { background: var(--tf-accent); color: #fff; }
+    .btn--primary:hover:not([disabled]) { background: var(--tf-accent-strong); }
+    .btn--secondary { background: transparent; color: var(--tf-text); border-color: var(--tf-border); }
+    .btn--secondary:hover:not([disabled]) { border-color: var(--tf-accent); color: var(--tf-accent); }
+    .btn--ghost { background: transparent; color: var(--tf-text-muted); }
+    .btn--ghost:hover:not([disabled]) { color: var(--tf-text); background: var(--tf-bg-raised); }
+    .btn--danger { background: var(--tf-danger); color: #fff; }
+    .btn--sm { padding: 0.375rem 0.75rem; font-size: var(--tf-text-xs); }
+    .btn--block { width: 100%; }
+
+    /* ================================================================
+       4. INPUTS
+       ================================================================ */
+    .field { display: flex; flex-direction: column; gap: var(--tf-space-2); margin-bottom: var(--tf-space-4); }
+    .field label { font-size: var(--tf-text-sm); font-weight: 600; }
+    .input, .select, .textarea {
+      font: inherit; color: var(--tf-text); background: var(--tf-bg);
+      border: 1px solid var(--tf-border); border-radius: var(--tf-radius-md);
+      padding: 0.625rem 0.875rem; width: 100%; transition: border-color var(--tf-transition);
+    }
+    .input:focus, .select:focus, .textarea:focus { border-color: var(--tf-accent); outline: none; }
+    .field__error { color: var(--tf-danger); font-size: var(--tf-text-xs); }
+
+    /* ================================================================
+       5. CARTES / BADGES
+       ================================================================ */
+    .card {
+      background: var(--tf-bg-raised); border: 1px solid var(--tf-border);
+      border-radius: var(--tf-radius-lg); padding: var(--tf-space-5);
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      font-size: var(--tf-text-xs); font-weight: 600; padding: 0.2rem 0.6rem;
+      border-radius: var(--tf-radius-full); background: var(--tf-accent-soft); color: var(--tf-accent);
+    }
+    .badge--success { background: rgba(23,138,80,.12); color: var(--tf-success); }
+    .badge--warning { background: rgba(180,83,9,.12); color: var(--tf-warning); }
+    .badge--neutral { background: var(--tf-border); color: var(--tf-text-muted); }
+    .badge--sponsor { background: transparent; border: 1px solid var(--tf-border); color: var(--tf-text-muted); font-weight: 500; } /* discret, exigé par le cahier des charges */
+
+    /* Score qualité/prix sur 10 — composant signature */
+    .score { display: inline-flex; flex-direction: column; align-items: center; min-width: 56px; }
+    .score__value { font-size: var(--tf-text-lg); font-weight: 700; color: var(--tf-accent); }
+    .score__label { font-size: var(--tf-text-xs); color: var(--tf-text-muted); }
+
+    /* ================================================================
+       6. MODALE (légère, sans ombre excessive)
+       ================================================================ */
+    dialog.tf-modal {
+      border: 1px solid var(--tf-border); border-radius: var(--tf-radius-lg);
+      background: var(--tf-bg); color: var(--tf-text); padding: var(--tf-space-6);
+      max-width: 480px; width: calc(100% - 2 * var(--tf-space-4));
+    }
+    dialog.tf-modal::backdrop { background: rgba(14, 14, 19, 0.55); }
+
+    /* ================================================================
+       7. BARRE MOBILE (tab bar mobile-first)
+       ================================================================ */
+    .tabbar {
+      position: fixed; inset-inline: 0; bottom: 0; display: flex; justify-content: space-around;
+      background: var(--tf-bg); border-top: 1px solid var(--tf-border); padding: var(--tf-space-2) 0;
+      z-index: 40;
+    }
+    .tabbar a { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: var(--tf-text-xs); color: var(--tf-text-muted); }
+    .tabbar a[aria-current="page"] { color: var(--tf-accent); }
+
+    @media (min-width: 768px) { .tabbar { display: none; } }
+
+    /* Réduction du mouvement (accessibilité) */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Page vitrine interne : sert de référence visuelle et de test rapide des tokens. -->
+  <header class="container section" style="display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <h1 style="margin:0">TicketFlow <span class="badge">Design System v1</span></h1>
+      <p class="muted">Billetterie événementielle — Togo · FCFA · Français</p>
+    </div>
+    <button class="btn btn--secondary" id="theme-toggle" aria-label="Basculer le thème clair ou sombre">Thème</button>
+  </header>
+
+  <main class="container">
+    <section class="section">
+      <h2>Boutons</h2>
+      <div style="display:flex;gap:var(--tf-space-3);flex-wrap:wrap">
+        <button class="btn btn--primary">Acheter un ticket</button>
+        <button class="btn btn--secondary">Comparer les offres</button>
+        <button class="btn btn--ghost">Plus tard</button>
+        <button class="btn btn--danger">Annuler la revente</button>
+        <button class="btn btn--primary" disabled>Paiement en cours…</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Formulaire</h2>
+      <div class="card" style="max-width:420px">
+        <div class="field">
+          <label for="phone">Numéro Mobile Money</label>
+          <input class="input" id="phone" type="tel" placeholder="+228 90 11 22 33" inputmode="tel" />
+          <span class="field__error">Format attendu : +228 suivi de 8 chiffres.</span>
+        </div>
+        <div class="field">
+          <label for="pay">Paiement</label>
+          <select class="select" id="pay"><option>Moov Money (Flooz)</option><option>Mixx by Yas (Togocom)</option></select>
+        </div>
+        <button class="btn btn--primary btn--block">Payer <span class="money">21 600 FCFA</span></button>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Carte événement & score qualité/prix</h2>
+      <article class="card" style="max-width:420px;display:flex;gap:var(--tf-space-5);align-items:center">
+        <div style="flex:1">
+          <span class="badge badge--sponsor">Partenaire</span>
+          <h3 style="margin:var(--tf-space-2) 0">Festival Kpézoun Live</h3>
+          <p class="muted" style="margin:0;font-size:var(--tf-text-sm)">Sam. 17 oct. · Palais des Congrès, Lomé</p>
+          <p class="money" style="font-weight:700;margin-top:var(--tf-space-3)">À partir de 10 800 FCFA</p>
+        </div>
+        <div class="score"><span class="score__value">8,7</span><span class="score__label">/ 10</span></div>
+        <span class="badge badge--success">Meilleure offre</span>
+      </article>
+    </section>
+  </main>
+
+  <nav class="tabbar" aria-label="Navigation principale">
+    <a href="#" aria-current="page">Recherche</a>
+    <a href="#">Mes tickets</a>
+    <a href="#">Revente</a>
+    <a href="#">Compte</a>
+  </nav>
+
+  <script>
+    // Micro-interaction thême : préférence système + persistance localStorage.
+    // (Le même script est dupliqué dans React/Angular via utils/theme.ts.)
+    const stored = localStorage.getItem('tf-theme');
+    const system = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = stored || system;
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem('tf-theme', next);
+    });
+  </script>
+</body>
+</html>

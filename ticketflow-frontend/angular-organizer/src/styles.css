@@ -1,0 +1,10 @@
+/* styles spécifiques back-office ; tokens partagés importés via angular.json
+   (design-system/tokens.css) pour garantir la cohérence React/Angular/Vanilla */
+.tf-sidebar { width: 240px; border-right: 1px solid var(--tf-border); min-height: 100vh; padding: var(--tf-space-5); position: sticky; top: 0; }
+.tf-sidebar a { display: block; padding: var(--tf-space-2) var(--tf-space-3); border-radius: var(--tf-radius-md); color: var(--tf-text-muted); font-weight: 600; margin-bottom: var(--tf-space-1); }
+.tf-sidebar a.active { background: var(--tf-accent-soft); color: var(--tf-accent); text-decoration: none; }
+.tf-kpi { display: grid; gap: var(--tf-space-4); grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.tf-table { width: 100%; border-collapse: collapse; font-size: var(--tf-text-sm); }
+.tf-table th { text-align: left; color: var(--tf-text-muted); font-weight: 600; padding: var(--tf-space-2); border-bottom: 1px solid var(--tf-border); }
+.tf-table td { padding: var(--tf-space-3) var(--tf-space-2); border-bottom: 1px solid var(--tf-border); }
+.tf-toast { position: fixed; bottom: var(--tf-space-5); right: var(--tf-space-5); z-index: 60; max-width: 360px; }
