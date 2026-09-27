@@ -9,7 +9,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/reverb": "^1.0",
         "endroid/qr-code": "^5.0",
-        "spatie/laravel-mobile-pass": "^3.0",
+        "spatie/laravel-mobile-pass": "^1.11",
         "predis/predis": "^2.2"
     },
     "require-dev": {
@@ -47,4 +47,17 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true
+}
+"config": {
+  "optimize-autoloader": true,
+  "preferred-install": "dist",
+  "sort-packages": true,
+  "allow-plugins": {
+    "pestphp/pest-plugin": true
+  },
+  "policy": {
+    "advisories": {
+      "block": false
+    }
+  }
 }
