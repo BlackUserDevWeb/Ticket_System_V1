@@ -5,7 +5,7 @@
     "license": "proprietary",
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^11.0",
+        "laravel/framework": "^11.5.0",
         "laravel/sanctum": "^4.0",
         "laravel/reverb": "^1.0",
         "endroid/qr-code": "^5.0",
@@ -16,7 +16,7 @@
         "fakerphp/faker": "^1.23",
         "laravel/pint": "^1.13",
         "pestphp/pest": "^2.34",
-        "pestphp/pest-plugin-laravel": "^2.3",
+        "pestphp/pest-plugin-laravel": "^2.4.0",
         "mockery/mockery": "^1.6"
     },
     "autoload": {
